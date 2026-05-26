@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quadro Operacional — Nazo Asa Sul</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+:root{--bg:#f8f7f4;--surface:#ffffff;--border:#e2e0d8;--border2:#ccc9be;--text:#1a1a18;--muted:#6b6960;--radius:10px;--radius-lg:14px;--danger:#c0392b;--success:#1e7e34;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.container{max-width:560px;margin:0 auto;padding:0 1rem 4rem;}
+.header{padding:1.25rem 0 1rem;border-bottom:1px solid var(--border);margin-bottom:1.25rem;}
+.header-title{font-size:18px;font-weight:600;display:flex;align-items:center;gap:8px;}
+.header-sub{font-size:13px;color:var(--muted);margin-top:3px;}
+.tabs{display:flex;gap:4px;margin-bottom:1.25rem;border-bottom:1px solid var(--border);}
+.tab{padding:9px 18px;font-size:14px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--muted);margin-bottom:-1px;transition:all .15s;font-family:inherit;}
+.tab.active{color:var(--text);border-bottom-color:var(--text);font-weight:600;}
+.section-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.6rem;}
+.turno-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem;}
+.turno-btn{padding:10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);font-size:14px;cursor:pointer;color:var(--muted);transition:all .15s;font-family:inherit;}
+.turno-btn.selected{background:var(--surface);border-color:var(--border2);color:var(--text);font-weight:600;}
+.date-input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:14px;margin-bottom:8px;font-family:inherit;}
+.setor-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;margin-bottom:.75rem;}
+.setor-header{display:flex;align-items:center;gap:8px;margin-bottom:.75rem;}
+.setor-nome{font-size:15px;font-weight:600;}
+.setor-total{margin-left:auto;font-size:13px;color:var(--muted);}
+.setor-total strong{color:var(--text);}
+.fields-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.field-label{font-size:12px;color:var(--muted);margin-bottom:4px;}
+.field-input{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:14px;text-align:center;font-family:inherit;}
+.extras-section{border-top:1px solid var(--border);padding-top:.75rem;margin-top:.75rem;}
+.extras-label{font-size:12px;color:var(--muted);margin-bottom:.5rem;}
+.extra-item{display:grid;grid-template-columns:1fr 110px 32px;gap:6px;align-items:center;margin-bottom:.5rem;}
+.extra-name,.extra-val{padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;width:100%;}
+.extra-val{text-align:right;}
+.btn-remove{background:none;border:none;cursor:pointer;color:var(--muted);font-size:18px;display:flex;align-items:center;justify-content:center;border-radius:6px;width:32px;height:32px;}
+.btn-gerar{width:100%;padding:13px;background:var(--text);border:none;border-radius:var(--radius-lg);font-size:15px;font-weight:600;cursor:pointer;color:#fff;margin-top:1rem;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;}
+.output-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;font-size:13px;color:var(--text);white-space:pre-wrap;font-family:'Courier New',monospace;line-height:1.7;margin-top:1rem;max-height:320px;overflow-y:auto;}
+.btn-action{width:100%;padding:10px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);font-size:14px;cursor:pointer;color:var(--text);margin-top:.5rem;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;}
+.hist-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;margin-bottom:.75rem;}
+.hist-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;}
+.hist-data{font-size:14px;font-weight:600;}
+.badge{font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600;}
+.badge-janta{background:#e8f0fb;color:#1a4a9e;}
+.badge-almoco{background:#fff4e0;color:#8a5a00;}
+.hist-totais{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:.75rem;}
+.hist-setor{font-size:12px;color:var(--muted);}
+.hist-setor strong{color:var(--text);}
+.hist-actions{display:flex;gap:6px;flex-wrap:wrap;padding-top:.75rem;border-top:1px solid var(--border);}
+.btn-sm{padding:5px 12px;font-size:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;cursor:pointer;color:var(--text);display:flex;align-items:center;gap:4px;font-family:inherit;}
+.btn-sm.danger{color:var(--danger);}
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--muted);}
+.empty-state i{font-size:40px;margin-bottom:.75rem;display:block;}
+.metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1.25rem;}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.875rem;text-align:center;}
+.metric-val{font-size:24px;font-weight:700;}
+.metric-lbl{font-size:11px;color:var(--muted);margin-top:2px;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--text);color:#fff;border-radius:var(--radius);padding:10px 20px;font-size:13px;font-weight:500;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+section{margin-bottom:1.25rem;}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="header-title">📋 Quadro Operacional</div>
+    <div class="header-sub">Nazo Asa Sul — Grupo Cajupar</div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('preencher')">✏️ Preencher</button>
+    <button class="tab" onclick="showTab('historico')">📂 Histórico</button>
+  </div>
+  <div id="tab-preencher">
+    <section>
+      <div class="section-label">Data e turno</div>
+      <input type="date" id="data-input" class="date-input">
+      <div class="turno-row">
+        <button class="turno-btn" id="btn-almoco" onclick="setTurno('Almoço')">☀️ Almoço</button>
+        <button class="turno-btn selected" id="btn-janta" onclick="setTurno('Janta')">🌙 Janta</button>
+      </div>
+    </section>
+    <section>
+      <div class="section-label">Setores</div>
+      <div id="setores-container"></div>
+    </section>
+    <button class="btn-gerar" onclick="gerarTexto()">🪄 Gerar texto para WhatsApp</button>
+    <div id="output-area" style="display:none">
+      <div class="output-box" id="output-text"></div>
+      <button class="btn-action" onclick="copiarTexto()">📋 Copiar para área de transferência</button>
+      <button class="btn-action" style="border-color:#a3d9a5;color:#1e7e34;" onclick="salvarRegistro()">💾 Salvar no histórico</button>
+    </div>
+  </div>
+  <div id="tab-historico" style="display:none">
+    <div id="historico-container"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+var SETORES=[
+  {id:'atendimento',nome:'Atendimento'},
+  {id:'recepcao',nome:'Recepção'},
+  {id:'caixa',nome:'Caixa/Delivery'},
+  {id:'sushi',nome:'Sushi'},
+  {id:'cozinha',nome:'Cozinha'},
+  {id:'bar',nome:'Bar'},
+  {id:'limpeza',nome:'Serviços Gerais'},
+  {id:'brinquedoteca',nome:'Brinquedoteca'},
+  {id:'manutencista',nome:'Manutencista'},
+  {id:'vigia',nome:'Vigia Noturno'}
+];
+var turnoAtual='Janta';
+var state={};
+var historico=[];
+
+function initState(){SETORES.forEach(function(s){state[s.id]={pontos:0,extras:[]};});}
+
+function setTurno(t){
+  turnoAtual=t;
+  document.getElementById('btn-almoco').className='turno-btn'+(t==='Almoço'?' selected':'');
+  document.getElementById('btn-janta').className='turno-btn'+(t==='Janta'?' selected':'');
+}
+
+function getTotal(id){return parseInt(state[id].pontos||0)+state[id].extras.length;}
+
+function renderSetores(){
+  var c=document.getElementById('setores-container');
+  var html='';
+  SETORES.forEach(function(s){
+    var total=getTotal(s.id);
+    var extHtml='';
+    state[s.id].extras.forEach(function(e,i){
+      extHtml+='<div class="extra-item">'+
+        '<input class="extra-name" placeholder="Nome do extra" value="'+esc(e.nome||'')+'" oninput="updateExtra(\''+s.id+'\','+i+',\'nome\',this.value)">'+
+        '<input class="extra-val" placeholder="R$ 0,00" value="'+esc(e.valor||'')+'" oninput="updateExtra(\''+s.id+'\','+i+',\'valor\',this.value)">'+
+        '<button class="btn-remove" onclick="removeExtra(\''+s.id+'\','+i+')">✕</button>'+
+        '</div>';
+    });
+    html+='<div class="setor-card">'+
+      '<div class="setor-header">'+
+        '<span class="setor-nome">'+s.nome+'</span>'+
+        '<span class="setor-total">Total: <strong>'+total+'</strong></span>'+
+      '</div>'+
+      '<div class="fields-row">'+
+        '<div><div class="field-label">Pontos batidos</div>'+
+        '<input class="field-input" type="number" min="0" value="'+(state[s.id].pontos||0)+'" oninput="updatePontos(\''+s.id+'\',this.value)"></div>'+
+        '<div><div class="field-label">Nº de extras</div>'+
+        '<input class="field-input" type="number" min="0" value="'+state[s.id].extras.length+'" onchange="setExtrasCount(\''+s.id+'\',this.value)"></div>'+
+      '</div>'+
+      (state[s.id].extras.length>0?'<div class="extras-section"><div class="extras-label">Nome e valor de cada extra</div>'+extHtml+'</div>':'')+
+      '</div>';
+  });
+  c.innerHTML=html;
+}
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+
+function updatePontos(id,v){state[id].pontos=parseInt(v)||0;renderSetores();}
+
+function setExtrasCount(id,v){
+  var n=parseInt(v)||0;
+  var curr=state[id].extras.length;
+  if(n>curr){for(var i=curr;i<n;i++)state[id].extras.push({nome:'',valor:''});}
+  else{state[id].extras=state[id].extras.slice(0,n);}
+  renderSetores();
+}
+
+function updateExtra(id,i,field,val){state[id].extras[i][field]=val;}
+
+function removeExtra(id,i){state[id].extras.splice(i,1);renderSetores();}
+
+function getDataFormatada(){
+  var d=document.getElementById('data-input').value;
+  if(!d)return new Date().toLocaleDateString('pt-BR');
+  var p=d.split('-');return p[2]+'/'+p[1]+'/'+p[0];
+}
+
+function gerarTexto(){
+  var saud=turnoAtual==='Janta'?'BOA NOITE':'BOM DIA';
+  var txt=saud+'!!! @Departamento Pessoal Grupo Cajupar\n';
+  txt+='Data: '+getDataFormatada()+'\n';
+  txt+='Turno: '+turnoAtual+'\n';
+  SETORES.forEach(function(s){
+    var d=state[s.id];
+    var ne=d.extras.length;
+    var tot=parseInt(d.pontos||0)+ne;
+    txt+='————————————————\n';
+    txt+=s.nome+'\n';
+    txt+='* Pontos Batidos: '+pad(d.pontos||0)+'\n';
+    if(ne>0)txt+='* EXTRAS: '+pad(ne)+'\n';
+    txt+='* Total: '+pad(tot)+'\n';
+  });
+  txt+='———————————————\n*Valores extras*\n';
+  var temExtras=false;
+  SETORES.forEach(function(s){
+    var ex=state[s.id].extras.filter(function(e){return e.nome||e.valor;});
+    if(ex.length>0){
+      temExtras=true;
+      txt+='*'+s.nome.toUpperCase()+'*\n';
+      ex.forEach(function(e){
+        txt+='*Extra:* '+(e.nome||'—')+': '+(e.valor||'R$ 0,00')+'\n';
+        txt+='('+turnoAtual+')\n';
+      });
+      var tv=ex.reduce(function(a,e){return a+(parseFloat((e.valor||'0').replace(/[^\d,]/g,'').replace(',','.'))||0);},0);
+      txt+='*Total: R$ '+tv.toLocaleString('pt-BR',{minimumFractionDigits:2})+'*\n';
+    }
+  });
+  if(!temExtras)txt+='Sem extras neste turno.\n';
+  txt+='———————————————\nNazo Asa Sul';
+  document.getElementById('output-text').textContent=txt;
+  document.getElementById('output-area').style.display='block';
+  setTimeout(function(){document.getElementById('output-area').scrollIntoView({behavior:'smooth'});},50);
+  window._txt=txt;
+}
+
+function pad(n){return String(n).padStart(2,'0');}
+
+function copiarTexto(){
+  var t=document.getElementById('output-text').textContent;
+  if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){showToast('✓ Copiado!');});}
+  else{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('✓ Copiado!');}
+}
+
+function salvarRegistro(){
+  var reg={id:Date.now(),data:getDataFormatada(),turno:turnoAtual,state:JSON.parse(JSON.stringify(state)),texto:window._txt||''};
+  historico.unshift(reg);
+  try{localStorage.setItem('cajupar_nazo_v3',JSON.stringify(historico));}catch(e){}
+  showToast('✓ Salvo no histórico!');
+}
+
+function showTab(tab){
+  document.getElementById('tab-preencher').style.display=tab==='preencher'?'':'none';
+  document.getElementById('tab-historico').style.display=tab==='historico'?'':'none';
+  document.querySelectorAll('.tab').forEach(function(t,i){t.classList.toggle('active',(tab==='preencher'&&i===0)||(tab==='historico'&&i===1));});
+  if(tab==='historico')renderHistorico();
+}
+
+function renderHistorico(){
+  var c=document.getElementById('historico-container');
+  if(!historico.length){c.innerHTML='<div class="empty-state"><div style="font-size:40px;margin-bottom:.75rem">📂</div>Nenhum registro salvo ainda.<br>Preencha um turno e clique em Salvar.</div>';return;}
+  var totG=historico.reduce(function(a,r){SETORES.forEach(function(s){a+=parseInt(r.state[s.id].pontos||0)+r.state[s.id].extras.length;});return a;},0);
+  var html='<div class="metric-grid"><div class="metric"><div class="metric-val">'+historico.length+'</div><div class="metric-lbl">Registros salvos</div></div><div class="metric"><div class="metric-val">'+totG+'</div><div class="metric-lbl">Total de funcionários</div></div></div>';
+  historico.forEach(function(r){
+    var tots=SETORES.map(function(s){var t=parseInt(r.state[s.id].pontos||0)+r.state[s.id].extras.length;return t>0?'<span class="hist-setor">'+s.nome+': <strong>'+t+'</strong></span>':null;}).filter(Boolean).join('');
+    html+='<div class="hist-item"><div class="hist-header"><span class="hist-data">📅 '+r.data+'</span><span class="badge '+(r.turno==='Almoço'?'badge-almoco':'badge-janta')+'">'+r.turno+'</span></div><div class="hist-totais">'+tots+'</div><div class="hist-actions"><button class="btn-sm" onclick="copiarHist('+r.id+')">📋 Copiar texto</button><button class="btn-sm" onclick="carregarReg('+r.id+')">🔄 Reutilizar</button><button class="btn-sm danger" onclick="excluirReg('+r.id+')">🗑 Excluir</button></div></div>';
+  });
+  c.innerHTML=html;
+}
+
+function copiarHist(id){
+  var r=historico.find(function(x){return x.id===id;});if(!r)return;
+  if(navigator.clipboard){navigator.clipboard.writeText(r.texto).then(function(){showToast('✓ Copiado!');});}
+  else{var ta=document.createElement('textarea');ta.value=r.texto;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('✓ Copiado!');}
+}
+
+function carregarReg(id){
+  var r=historico.find(function(x){return x.id===id;});if(!r)return;
+  state=JSON.parse(JSON.stringify(r.state));showTab('preencher');renderSetores();showToast('✓ Dados carregados!');
+}
+
+function excluirReg(id){
+  historico=historico.filter(function(x){return x.id!==id;});
+  try{localStorage.setItem('cajupar_nazo_v3',JSON.stringify(historico));}catch(e){}
+  renderHistorico();
+}
+
+function showToast(msg){
+  var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2200);
+}
+
+document.getElementById('data-input').value=new Date().toISOString().slice(0,10);
+try{var h=localStorage.getItem('cajupar_nazo_v3');if(h)historico=JSON.parse(h);}catch(e){}
+initState();
+renderSetores();
+</script>
+</body>
+</html>
